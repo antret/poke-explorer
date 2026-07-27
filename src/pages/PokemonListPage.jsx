@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { getPokemons } from '../api/pokemonApi'
+import PokemonListSkeleton from '../components/PokemonListSkeleton'
 
 function PokemonListPage() {
   const {
@@ -10,25 +11,20 @@ function PokemonListPage() {
     error,
   } = useQuery({
     queryKey: ['pokemons', 1],
-    queryFn: () => getPokemons({
-      page: 1,
-      limit: 20,
-    }),
+    queryFn: () =>
+      getPokemons({
+        page: 1,
+        limit: 20,
+      }),
   })
-
-  if (isPending) {
-    return (
-      <p className="text-center text-lg text-slate-600">
-        Cargando Pokémon...
-      </p>
-    )
-  }
 
   if (isError) {
     return (
-      <p className="text-center text-lg text-red-600">
-        {error.message}
-      </p>
+      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        <p className="text-center text-lg text-red-600">
+          {error.message}
+        </p>
+      </main>
     )
   }
 
@@ -45,18 +41,22 @@ function PokemonListPage() {
           </p>
         </header>
 
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {data.results.map((pokemon) => (
-            <li
-              key={pokemon.name}
-              className="rounded-xl bg-white p-5 text-center shadow"
-            >
-              <p className="font-semibold capitalize text-slate-800">
-                {pokemon.name}
-              </p>
-            </li>
-          ))}
-        </ul>
+        {isPending ? (
+          <PokemonListSkeleton />
+        ) : (
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {data.results.map((pokemon) => (
+              <li
+                key={pokemon.name}
+                className="rounded-xl bg-white p-5 text-center shadow"
+              >
+                <p className="font-semibold capitalize text-slate-800">
+                  {pokemon.name}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </main>
   )

@@ -4,7 +4,10 @@ import { useQuery } from '@tanstack/react-query'
 import { getPokemons } from '../api/pokemonApi'
 import PokemonListSkeleton from '../components/PokemonListSkeleton'
 
+const ITEMS_PER_PAGE = 20
+
 function PokemonListPage() {
+  const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
 
   const {
@@ -13,11 +16,11 @@ function PokemonListPage() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['pokemons', 1],
+    queryKey: ['pokemons', page],
     queryFn: () =>
       getPokemons({
-        page: 1,
-        limit: 20,
+        page,
+        limit: ITEMS_PER_PAGE,
       }),
   })
 
@@ -27,6 +30,10 @@ function PokemonListPage() {
         .toLowerCase()
         .includes(searchTerm.trim().toLowerCase()),
     ) ?? []
+
+  const totalPages = data
+    ? Math.ceil(data.count / ITEMS_PER_PAGE)
+    : 0
 
   if (isError) {
     return (
@@ -90,6 +97,39 @@ function PokemonListPage() {
           <p className="text-center text-lg text-slate-600">
             No se encontraron Pokémon.
           </p>
+        )}
+
+        {!isPending && data && (
+          <nav
+            aria-label="Paginación de Pokémon"
+            className="mt-8 flex items-center justify-center gap-4"
+          >
+            <button
+              type="button"
+              onClick={() =>
+                setPage((currentPage) => currentPage - 1)
+              }
+              disabled={!data.previous}
+              className="rounded-lg bg-red-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+            >
+              Anterior
+            </button>
+
+            <span className="text-sm font-medium text-slate-700">
+              Página {page} de {totalPages}
+            </span>
+
+            <button
+              type="button"
+              onClick={() =>
+                setPage((currentPage) => currentPage + 1)
+              }
+              disabled={!data.next}
+              className="rounded-lg bg-red-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+            >
+              Siguiente
+            </button>
+          </nav>
         )}
       </section>
     </main>

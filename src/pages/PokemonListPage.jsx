@@ -46,7 +46,7 @@ function PokemonListPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-10">
+    <main className="min-h-screen bg-slate-100 px-4 py-10"> 
       <section className="mx-auto max-w-6xl">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-red-600">
@@ -81,7 +81,7 @@ function PokemonListPage() {
         {isPending ? (
           <PokemonListSkeleton />
         ) : filteredPokemons.length > 0 ? (
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"> 
             {filteredPokemons.map((pokemon) => (
               <li
                 key={pokemon.name}

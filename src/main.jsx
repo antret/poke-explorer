@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query'
 
 import App from './App.jsx'
-import './index.css'
+import './styles/tailwind.css'
 
 const queryClient = new QueryClient()
 

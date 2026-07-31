@@ -20,4 +20,18 @@ export async function getPokemons({ page = 1, limit = 20 }) {
   }
 
   return response.json()
-}   
+}
+
+export async function getPokemonByName(name) {
+  const normalizedName = name.trim().toLowerCase()
+
+  const response = await fetch(
+    `${POKE_API_URL}/${encodeURIComponent(normalizedName)}`,
+  )
+
+  if (!response.ok) {
+    throw new Error('No se pudo obtener el detalle del Pokémon')
+  }
+
+  return response.json()
+}

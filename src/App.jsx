@@ -1,7 +1,15 @@
+import { Routes, Route } from 'react-router'
 import PokemonListPage from './pages/PokemonListPage'
 
 function App() {
-  return <PokemonListPage />
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={<PokemonListPage />}
+      />
+    </Routes>
+  )
 }
 
 export default App

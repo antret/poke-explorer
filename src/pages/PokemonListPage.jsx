@@ -57,6 +57,13 @@ function PokemonListPage() {
           <p className="mt-2 text-slate-600">
             Explora los Pokémon disponibles en PokeAPI
           </p>
+
+          <Link
+            to="/posts/nuevo"
+            className="mt-4 inline-block rounded-lg bg-red-600 px-4 py-2 font-semibold text-white"
+          >
+            Crear publicación
+          </Link>
         </header>
 
         <div className="mx-auto mb-8 max-w-md">

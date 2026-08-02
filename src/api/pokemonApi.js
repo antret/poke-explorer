@@ -1,5 +1,8 @@
 const POKE_API_URL = 'https://pokeapi.co/api/v2/pokemon'
 
+const POKEMON_ARTWORK_URL =
+  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork'
+
 const delay = (milliseconds) => {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds)
@@ -19,7 +22,23 @@ export async function getPokemons({ page = 1, limit = 20 }) {
     throw new Error('No se pudieron obtener los Pokémon')
   }
 
-  return response.json()
+  const data = await response.json()
+
+  const results = data.results.map((pokemon) => {
+    const urlParts = pokemon.url.split('/').filter(Boolean)
+    const id = Number(urlParts[urlParts.length - 1])
+
+    return {
+      ...pokemon,
+      id,
+      image: `${POKEMON_ARTWORK_URL}/${id}.png`,
+    }
+  })
+
+  return {
+    ...data,
+    results,
+  }
 }
 
 export async function getPokemonByName(name) {

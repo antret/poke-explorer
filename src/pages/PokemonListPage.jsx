@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 
 import { getPokemons } from '../api/pokemonApi'
+import { ErrorState } from '../components/PageState'
 import PokemonListSkeleton from '../components/PokemonListSkeleton'
 
 const ITEMS_PER_PAGE = 20
@@ -38,11 +39,11 @@ function PokemonListPage() {
 
   if (isError) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-        <p className="text-center text-lg text-red-600">
-          {error.message}
-        </p>
-      </main>
+      <ErrorState
+        message={error.message}
+        backTo="/"
+        backLabel="Volver a intentar"
+      />
     )
   }
 
@@ -58,12 +59,21 @@ function PokemonListPage() {
             Explora los Pokémon disponibles en PokeAPI
           </p>
 
-          <Link
-            to="/posts/nuevo"
-            className="mt-4 inline-block rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700"
-          >
-            Crear publicación
-          </Link>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
+            <Link
+              to="/collection"
+              className="rounded-lg bg-slate-800 px-4 py-2 font-semibold text-white transition hover:bg-slate-700"
+            >
+              Mi colección
+            </Link>
+
+            <Link
+              to="/posts/nuevo"
+              className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700"
+            >
+              Crear publicación
+            </Link>
+          </div>
         </header>
 
         <div className="mx-auto mb-8 max-w-md">

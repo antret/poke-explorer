@@ -1,5 +1,9 @@
 import { Link } from 'react-router'
 
+import {
+  ErrorState,
+  LoadingState,
+} from '../../../components/PageState'
 import { useCollectionItems } from '../hooks/useCollectionItems'
 
 function CollectionListPage() {
@@ -12,28 +16,17 @@ function CollectionListPage() {
 
   if (isPending) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-        <p className="text-lg font-medium text-slate-600">
-          Cargando colección...
-        </p>
-      </main>
+      <LoadingState message="Cargando colección..." />
     )
   }
 
   if (isError) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-100 px-4">
-        <p className="text-center text-lg font-medium text-red-600">
-          {error.message}
-        </p>
-
-        <Link
-          to="/"
-          className="rounded-lg bg-slate-800 px-4 py-2 font-semibold text-white transition hover:bg-slate-700"
-        >
-          Volver al inicio
-        </Link>
-      </main>
+      <ErrorState
+        message={error.message}
+        backTo="/"
+        backLabel="Volver al inicio"
+      />
     )
   }
 
@@ -51,7 +44,8 @@ function CollectionListPage() {
             </h1>
 
             <p className="mt-2 text-slate-600">
-              Administra los Pokémon guardados en tu colección.
+              Administra los Pokémon guardados en tu
+              colección.
             </p>
           </div>
 
@@ -79,8 +73,8 @@ function CollectionListPage() {
             </h2>
 
             <p className="mx-auto mt-3 max-w-md text-slate-600">
-              Agrega tu primer Pokémon y registra su apodo, rol y
-              notas dentro del equipo.
+              Agrega tu primer Pokémon y registra su apodo,
+              rol y notas dentro del equipo.
             </p>
 
             <Link

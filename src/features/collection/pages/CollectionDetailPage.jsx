@@ -7,25 +7,13 @@ import {
 import { toast } from 'sonner'
 
 import { getPokemonByName } from '../../../api/pokemonApi'
+import {
+  ErrorState,
+  LoadingState,
+} from '../../../components/PageState'
 import { useCollectionItem } from '../hooks/useCollectionItem'
 import { useDeleteCollectionItem } from '../hooks/useDeleteCollectionItem'
-
-function getRequestErrorMessage(error) {
-  const responseData = error.response?.data
-
-  if (typeof responseData === 'string') {
-    return responseData
-  }
-
-  if (typeof responseData?.message === 'string') {
-    return responseData.message
-  }
-
-  return (
-    error.message ||
-    'No se pudo eliminar el Pokémon de la colección.'
-  )
-}
+import { getRequestErrorMessage } from '../utils/getRequestErrorMessage'
 
 function CollectionDetailPage() {
   const { id } = useParams()
@@ -79,7 +67,12 @@ function CollectionDetailPage() {
         replace: true,
       })
     } catch (error) {
-      toast.error(getRequestErrorMessage(error))
+      toast.error(
+        getRequestErrorMessage(
+          error,
+          'No se pudo eliminar el Pokémon de la colección.',
+        ),
+      )
     }
   }
 
@@ -88,45 +81,27 @@ function CollectionDetailPage() {
     (collectionItem && isPokemonPending)
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-        <p className="text-lg font-medium text-slate-600">
-          Cargando detalle de la colección...
-        </p>
-      </main>
+      <LoadingState message="Cargando detalle de la colección..." />
     )
   }
 
   if (isCollectionError) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-100 px-4">
-        <p className="text-center text-lg font-medium text-red-600">
-          {collectionError.message}
-        </p>
-
-        <Link
-          to="/collection"
-          className="rounded-lg bg-slate-800 px-4 py-2 font-semibold text-white transition hover:bg-slate-700"
-        >
-          Volver a la colección
-        </Link>
-      </main>
+      <ErrorState
+        message={collectionError.message}
+        backTo="/collection"
+        backLabel="Volver a la colección"
+      />
     )
   }
 
   if (isPokemonError) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-100 px-4">
-        <p className="text-center text-lg font-medium text-red-600">
-          {pokemonError.message}
-        </p>
-
-        <Link
-          to="/collection"
-          className="rounded-lg bg-slate-800 px-4 py-2 font-semibold text-white transition hover:bg-slate-700"
-        >
-          Volver a la colección
-        </Link>
-      </main>
+      <ErrorState
+        message={pokemonError.message}
+        backTo="/collection"
+        backLabel="Volver a la colección"
+      />
     )
   }
 

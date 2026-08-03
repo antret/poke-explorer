@@ -6,26 +6,14 @@ import {
 } from 'react-router'
 import { toast } from 'sonner'
 
+import {
+  ErrorState,
+  LoadingState,
+} from '../../../components/PageState'
 import CollectionForm from '../components/CollectionForm'
 import { useCollectionItem } from '../hooks/useCollectionItem'
 import { useUpdateCollectionItem } from '../hooks/useUpdateCollectionItem'
-
-function getRequestErrorMessage(error) {
-  const responseData = error.response?.data
-
-  if (typeof responseData === 'string') {
-    return responseData
-  }
-
-  if (typeof responseData?.message === 'string') {
-    return responseData.message
-  }
-
-  return (
-    error.message ||
-    'No se pudo actualizar el Pokémon de la colección.'
-  )
-}
+import { getRequestErrorMessage } from '../utils/getRequestErrorMessage'
 
 function EditCollectionPage() {
   const { id } = useParams()
@@ -70,34 +58,28 @@ function EditCollectionPage() {
 
       navigate(`/collection/${id}`)
     } catch (error) {
-      toast.error(getRequestErrorMessage(error))
+      toast.error(
+        getRequestErrorMessage(
+          error,
+          'No se pudo actualizar el Pokémon de la colección.',
+        ),
+      )
     }
   }
 
   if (isCollectionPending) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-        <p className="text-lg font-medium text-slate-600">
-          Cargando información del Pokémon...
-        </p>
-      </main>
+      <LoadingState message="Cargando información del Pokémon..." />
     )
   }
 
   if (isCollectionError) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-100 px-4">
-        <p className="text-center text-lg font-medium text-red-600">
-          {collectionError.message}
-        </p>
-
-        <Link
-          to="/collection"
-          className="rounded-lg bg-slate-800 px-4 py-2 font-semibold text-white transition hover:bg-slate-700"
-        >
-          Volver a la colección
-        </Link>
-      </main>
+      <ErrorState
+        message={collectionError.message}
+        backTo="/collection"
+        backLabel="Volver a la colección"
+      />
     )
   }
 

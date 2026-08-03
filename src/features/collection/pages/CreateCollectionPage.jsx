@@ -3,23 +3,7 @@ import { toast } from 'sonner'
 
 import CollectionForm from '../components/CollectionForm'
 import { useCreateCollectionItem } from '../hooks/useCreateCollectionItem'
-
-function getRequestErrorMessage(error) {
-  const responseData = error.response?.data
-
-  if (typeof responseData === 'string') {
-    return responseData
-  }
-
-  if (typeof responseData?.message === 'string') {
-    return responseData.message
-  }
-
-  return (
-    error.message ||
-    'No se pudo agregar el Pokémon a la colección.'
-  )
-}
+import { getRequestErrorMessage } from '../utils/getRequestErrorMessage'
 
 function CreateCollectionPage() {
   const navigate = useNavigate()
@@ -39,7 +23,12 @@ function CreateCollectionPage() {
 
       navigate('/collection')
     } catch (error) {
-      toast.error(getRequestErrorMessage(error))
+      toast.error(
+        getRequestErrorMessage(
+          error,
+          'No se pudo agregar el Pokémon a la colección.',
+        ),
+      )
     }
   }
 
